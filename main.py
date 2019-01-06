@@ -1,12 +1,12 @@
-from flask import Flask, request, redirect, render_template
+from flask import Flask, redirect, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+db = SQLAlchemy(app)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:root@localhost:3306/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
 
-db = SQLAlchemy(app)
 
 class Task(db.Model):
 
@@ -16,6 +16,10 @@ class Task(db.Model):
     #constructor
     def __init__(self, name):
         self.name = name
+
+    # http://flask-sqlalchemy.pocoo.org/2.3/quickstart/ 
+    #def __repr__(self):
+        #return '<User %r>' % self.name
 
 task = []
 
@@ -28,5 +32,6 @@ def index():
 
     return render_template('todos.html', title="Build a Blog", task=task)
 
-
-app.run()
+# shield app 
+if __name__ == '__main__':
+    app.run()
