@@ -17,7 +17,8 @@ class Task(db.Model):
     def __init__(self, name):
         self.name = name
 
-    # http://flask-sqlalchemy.pocoo.org/2.3/quickstart/ 
+    # http://flask-sqlalchemy.pocoo.org/2.3/quickstart/
+    # https://github.com/Microsoft/vscode-python/issues/50
     #def __repr__(self):
         #return '<User %r>' % self.name
 
@@ -32,6 +33,6 @@ def index():
 
     return render_template('todos.html', title="Build a Blog", task=task)
 
-# shield app 
+# shield app
 if __name__ == '__main__':
     app.run()
