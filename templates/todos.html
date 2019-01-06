@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Build a Blog</h1>
+    <form method='post'>
+        <label>
+        
+        New Blog:
+        <input type="text" name='task' />
+        
+        </label>
+
+    </form>
+
+    <hr />
+
+    {% if tasks | length == 0 %}
+    <p> No task yet </p>
+
+    {% else %}
+
+        <ul>
+        
+            {% for task in task %}
+            <li>{{task}}</li>
+            {%% endfor}
+        
+        </ul>
+
+    {% endif %}
+
+{% endblock %}
+
+    
