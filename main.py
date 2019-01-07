@@ -22,15 +22,17 @@ class Blog(db.Model):
         self.name = name
         self.completed = False
 
-    # http://flask-sqlalchemy.pocoo.org/2.3/quickstart/
-    # https://github.com/Microsoft/vscode-python/issues/50
-    # def __repr__(self):
-        # return '<User %r>' % self.name
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 
-#blogs = []
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
 
+ 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
