@@ -7,23 +7,24 @@
         <label>
         
         New Blog:
-        <input type="text" name='task' />
+        <input type="text" name='blog' />
         
         </label>
+    <input type="submit" value='Add Blog' />
 
     </form>
 
     <hr />
 
-    {% if tasks | length == 0 %}
-    <p> No task yet </p>
+    {% if blogs | length == 0 %}
+    <p> No blogs yet </p>
 
     {% else %}
 
         <ul>
         
-            {% for task in task %}
-            <li>{{task}}</li>
+            {% for blog in blogs %}
+            <li>{{blog}}</li>
             {%% endfor}
         
         </ul>
