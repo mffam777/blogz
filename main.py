@@ -15,26 +15,51 @@ class Blog(db.Model):
 
     id = db.Column(db.Interger, primary_key=True)
     name = db.Column(db.String(120))
+    completed = db.Column(db.Boolean)
 
-    #constructor
+    # constructor
     def __init__(self, name):
         self.name = name
+        self.completed = False
 
     # http://flask-sqlalchemy.pocoo.org/2.3/quickstart/
     # https://github.com/Microsoft/vscode-python/issues/50
-    #def __repr__(self):
-        #return '<User %r>' % self.name
+    # def __repr__(self):
+        # return '<User %r>' % self.name
 
-blogs = []
+
+#blogs = []
+
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
 
     if request.method == 'POST':
-        blog = request.form('blog')
-        blogs.append(blog)
+        blog_name = request.form('blog')
+        new_blog = Blog(blog_name)
+        db.session.add(new_blog)
+        db.session.commit()
 
-    return render_template('blog.html', title="Build a Blog", blogs=blogs)
+    blogs = Blog.query.filter_by(completed=False).all()
+    completed_blogs = Blog.query.filter_by(completed=True).all()
+    return render_template('blog.html', title="Build a Blog",
+                           blogs=blogs, completed_blogs=completed_blogs)
+
+# handeller to deleted blog
+
+
+@app.route('/delete-blog', methods=['POST'])
+def delete_blog():
+
+    blog_id = int(request.form['blog-id'])
+    blog = Blog.query.get(blog_id)
+    blog.completed = True
+    db.session.add(blog)
+    db.session.commit()
+
+    return redirect('/')
+
+
 
 # shield app
 if __name__ == '__main__':
