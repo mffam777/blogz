@@ -1,80 +1,78 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, BooleanField, TextAreaField
+from wtforms.validators import DataRequired, ValidationError
+import secrets
 
 
 app = Flask(__name__)
+app.secret_key = 'secret'
 
-app.config['DEBUG'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:root@localhost :80/build-a-blog'
 
-db = SQLAlchemy(app)
+# Note: the connection string after :// contains the following info:
+# user:password@server:portNumber/databaseName
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://build-a-blog:toor@localhost:3306/build-a-blog'
 app.config['SQLALCHEMY_ECHO'] = True
+
+app.config["DEBUG"] = True
+db = SQLAlchemy(app)
 
 
 class Blog(db.Model):
 
-    id = db.Column(db.Interger, primary_key=True)
-    name = db.Column(db.String(120))
-    completed = db.Column(db.Boolean)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(120))
+    content = db.Column(db.Text, nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False,
+                            default=datetime.utcnow)
 
-    # constructor
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, title, content):
+        self.title = title
         self.completed = False
+        self.content = content
+
+    # def __repr__(self):
+        # return f"Post('{self.title}', '{self.date_posted}')"
 
 
-
-class User(db.Model):
-
-    id = db.Column(db.Interger, primary_key=True)
-    email = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
-
-    def __init__(self, email, password):
-        self.email = email
-        self.password = password
-
-@app.route('/login')
-def login():
-    return render_template('login.html')
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')
 
 
-@app.route('/register')
-def register():
-    return render_template('register.html')
-
-
- 
-@app.route('/', methods=['POST', 'GET'])
-def index():
-
-    if request.method == 'POST':
-        blog_name = request.form('blog')
-        new_blog = Blog(blog_name)
-        db.session.add(new_blog)
+@app.route('/', methods=['GET', 'POST'])
+def article():
+    form = PostForm()
+    if request.method == "GET":
+        blogs = Blog.query.all()
+        print(blogs[1].id)
+        return render_template('article.html', blog=blogs)
+    if request.method == "POST":
+        post = Blog(title=request.form['btitle'], content=request.form['new_blog'])
+        db.session.add(post)
         db.session.commit()
-
-    blogs = Blog.query.filter_by(completed=False).all()
-    completed_blogs = Blog.query.filter_by(completed=True).all()
-    return render_template('blog.html', title="Build a Blog",
-                           blogs=blogs, completed_blogs=completed_blogs)
-
-# handeller to deleted blog
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('article'))
 
 
-@app.route('/delete-blog', methods=['POST'])
-def delete_blog():
+@app.route('/blogi/', methods=['GET', 'POST'])
+def get_blog():
+    id_blog = request.args.get("id")
+    blog = Blog.query.get(id_blog)
+    # print(request)
 
-    blog_id = int(request.form['blog-id'])
-    blog = Blog.query.get(blog_id)
-    blog.completed = True
-    db.session.add(blog)
-    db.session.commit()
-
-    return redirect('/')
+    return render_template('posted_blog.html', blog=blog)
 
 
+@app.route('/article', methods=['GET', 'POST'])
+def home():
 
-# shield app
+    return redirect(url_for('article'))
+
+
 if __name__ == '__main__':
     app.run()

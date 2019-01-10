@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block body %}
+
+
+<div class="container">
+  <form method='POST' action="">
+    <div class="row">
+      <div class="col-25">
+        <label>
+          Blog Title
+        </label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="btitle" name="btitle" placeholder="Your blog..">
+      </div>
+    </div>
+
+	 <div class="row">
+      <div class="col-25">
+        <label for="blog">Write Your Blog!</label>
+      </div>
+      <!--
+      
+      -->
+      <div class="col-75">
+        <textarea id="blog" name="new_blog" placeholder="Write something.." style="height:200px"></textarea>          
+      
+        </div>
+    </div>
+
+    <div class="row">
+      <input type="submit" value="Add Blog">
+    </div>
+    </form>
+    <hr />
+<!---
+This section will update with my Blog Posts 
+---->
+
+{% for blogs in blog %}
+  <div class="blog-title">
+    <a href="./blogi?id={{ blogs.id }}">
+    <h2>{{ blogs.title }}</h2>
+    </a>
+  </div>
+  <div class="blog-text">
+  <p>
+    {{ blogs.content }}
+  </p>
+  </div>
+
+{% endfor %}
+
+{% endblock body %}
