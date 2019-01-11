@@ -10,7 +10,7 @@
 # Git Hub Repository: https://github.com/mffam777/-blogz.git
 
 
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_wtf import FlaskForm
@@ -32,7 +32,7 @@ app.config['SQLALCHEMY_ECHO'] = True
 app.config["DEBUG"] = True
 db = SQLAlchemy(app)
 
-class Task(db.Model):
+class Blog(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
@@ -58,7 +58,7 @@ class User(db.Model):
 
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'register']
+    allowed_routes = ['login', 'signup']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
 
@@ -79,8 +79,8 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/register', methods=['POST', 'GET'])
-def register():
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
@@ -99,7 +99,7 @@ def register():
             # TODO - user better response messaging
             return "<h1>Duplicate user</h1>"
 
-    return render_template('register.html')
+    return render_template('signup.html')
 
 @app.route('/logout')
 def logout():
@@ -113,24 +113,24 @@ def index():
     owner = User.query.filter_by(email=session['email']).first()
 
     if request.method == 'POST':
-        task_name = request.form['task']
-        new_task = Task(task_name, owner)
-        db.session.add(new_task)
+        blog_name = request.form['blog']
+        new_blog = Blog(blog_name, owner)
+        db.session.add(new_blog)
         db.session.commit()
 
-    tasks = Task.query.filter_by(completed=False,owner=owner).all()
-    completed_tasks = Task.query.filter_by(completed=True,owner=owner).all()
-    return render_template('todos.html',title="Get It Done!", 
-        tasks=tasks, completed_tasks=completed_tasks)
+    blogs = Blog.query.filter_by(completed=False, owner=owner).all()
+    completed_blogs = Blog.query.filter_by(completed=True, owner=owner).all()
+    return render_template('index.html',title="Blogz!", 
+        blogs=blogs, completed_blogs=completed_blogs)
 
 
-@app.route('/delete-task', methods=['POST'])
-def delete_task():
+@app.route('/delete-blog', methods=['POST'])
+def delete_blog():
 
-    task_id = int(request.form['task-id'])
-    task = Task.query.get(task_id)
-    task.completed = True
-    db.session.add(task)
+    blog_id = int(request.form['blog-id'])
+    blog = Blog.query.get(blog_id)
+    blog.completed = True
+    db.session.add(blog)
     db.session.commit()
 
     return redirect('/')
