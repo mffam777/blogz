@@ -50,7 +50,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
-    tasks = db.relationship('Task', backref='owner')
+    blogs = db.relationship('Blog', backref='owner')
 
     def __init__(self, email, password):
         self.email = email
@@ -62,7 +62,7 @@ def require_login():
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
 
-
+# initial page
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -75,8 +75,8 @@ def login():
             return redirect('/')
         else:
             flash('User password incorrect, or user does not exist', 'error')
-
-    return render_template('login.html')
+    # user not in file redirect to signup page
+    return render_template('signup.html')
 
 
 @app.route('/signup', methods=['POST', 'GET'])
@@ -99,7 +99,7 @@ def signup():
             # TODO - user better response messaging
             return "<h1>Duplicate user</h1>"
 
-    return render_template('signup.html')
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
