@@ -107,8 +107,9 @@ venv.bak/
 .vscode
 
 # exclude folder
-GIT_DIR C:\Users\alber\lc101\user-signup\exclude
-dir_to_ignore/lc101/user-signup\exclude
+GIT_DIR C:\Users\alber\lc101\blogz\exclude
+GIT_DIR C:/Users/alber/lc101/blogz/exclude
+dir_to_ignore/lc101/blogz/exclude
 
 # Temporary files
 .xlsx

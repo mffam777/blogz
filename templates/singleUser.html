@@ -1,7 +1,9 @@
+<!--Single user Blog -->
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Get It Done!</h1>
+    <h1>My Blogz!</h1>
+    <!--
     <form method='post'>
         <label>
             New Blog:
@@ -28,13 +30,13 @@
         </ul>
 
     {% endif %}
-
+-->
     <hr />
 
-    <h2>Completed</h2>
+    <h2></h2>
 
     <ul>
-        {% for blog in completed_blogs %}
+        {% for blog in blogs %}
         <li>{{blog.name}}</li>
         {% endfor %}
     </ul>

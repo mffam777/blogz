@@ -1,13 +1,36 @@
+<!--display all blogz -->
+
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Blogz!</h1>
+    <h1>Blogz Library!</h1>
     <form method='post'>
+
+        Blog Title:
+        
         <label>
-            New Blogz:
-            <input type="text" name='blog' />
-        </label>
-        <input type="submit" value='Add Blog' />
+          </div>
+      <div class="col-75">
+        <input type="text" id="btitle" name="btitle" placeholder="Your blog..">
+      </div>
+    </div>
+
+	 <div class="row">
+      <div class="col-25">
+        <label for="blog">Write Your Blog!</label>
+      </div>
+      <!--
+      
+      -->
+      <div class="col-75">
+        <textarea id="blog" name="new_blog" placeholder="Write something.." style="height:200px"></textarea>          
+      
+        </div>
+    </div>
+
+    <div class="row">
+      <input type="submit" value="Add Blog">
+    </div>
     </form>
 
     <hr />
@@ -15,6 +38,8 @@
     {% if blogs|length == 0 %}
     <p>No blogs yet</p>
     {% else %}
+<!--
+<hr />
 
         <ul>
             {% for blog in blogs %}
@@ -29,9 +54,11 @@
 
     {% endif %}
 
+    -->
+
     <hr />
 
-    <h2>Completed</h2>
+    <h2></h2>
 
     <ul>
         {% for blog in completed_blogs %}
