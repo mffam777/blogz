@@ -3,7 +3,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Blogz Library!</h1>
+    <h1>Blogz Main Page!</h1>
     <form method='post'>
 
         Blog Title:
@@ -11,7 +11,7 @@
         <label>
           </div>
       <div class="col-75">
-        <input type="text" id="btitle" name="btitle" placeholder="Your blog..">
+        <input type="text" id="btitle" name="blog_name" placeholder="Your blog..">
       </div>
     </div>
 
@@ -36,6 +36,7 @@
     <hr />
 
     {% if blogs|length == 0 %}
+    <h2>Posted Blogz</h2>
     <p>No blogs yet</p>
     {% else %}
 <!--
