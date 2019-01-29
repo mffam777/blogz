@@ -9,9 +9,8 @@
         Blog Title:
         
         <label>
-          </div>
       <div class="col-75">
-        <input type="text" id="btitle" name="blog_name" placeholder="Your blog..">
+        <input type="text" name="blog">
       </div>
     </div>
 
@@ -19,11 +18,8 @@
       <div class="col-25">
         <label for="blog">Write Your Blog!</label>
       </div>
-      <!--
-      
-      -->
       <div class="col-75">
-        <textarea id="blog" name="new_blog" placeholder="Write something.." style="height:200px"></textarea>          
+        <textarea name="nblog" placeholder="Write something.." style="height:200px"></textarea>          
       
         </div>
     </div>
@@ -39,32 +35,29 @@
     <h2>Posted Blogz</h2>
     <p>No blogs yet</p>
     {% else %}
-<!--
+
 <hr />
 
-        <ul>
+        <div>
             {% for blog in blogs %}
-            <li>{{blog.name}}
-                <form method="POST" action="/delete-blog" style="display:inline-block;">
-                    <input type="hidden" name="blog-id" value="{{blog.id}}" />
-                    <input type="submit" value="Done!" />
-                </form>
-            </li>
+            <div class="blog-post">
+            <h2>{{blog.name}}</h2>
+            <section>{{blog.post}}</section>
+            </div>
             {% endfor %}
-        </ul>
+        </div>
 
     {% endif %}
 
-    -->
+
 
     <hr />
 
-    <h2></h2>
-
-    <ul>
-        {% for blog in completed_blogs %}
-        <li>{{blog.name}}</li>
+    <div>
+        {% for blog in posted_blogs %}
+        <h2>{{blog.name}}</h2>
+        <section>{{blog.post}}</section>
         {% endfor %}
-    </ul>
+    </div>
 
 {% endblock %}

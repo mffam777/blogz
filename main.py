@@ -31,20 +31,21 @@ app.secret_key = 'secret'
 
 
 class Blog(db.Model):
-    
+
     id = db.Column(db.Integer, primary_key=True)
-    #name = db.Column(db.String(120))
-    title = db.Column(db.String(120))
+    name = db.Column(db.String(120))
+    #title = db.Column(db.String(120))
     # completed = db.Column(db.Boolean)
     post = db.Column(db.Text, nullable=False)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     #date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    def __init__(self, title, owner):
-        self.title = title
-        self.post = False        
-        #self.post = Blog
+    def __init__(self, name, postz, owner):
+        self.name = name
+        self.post = False
+        self.post = postz
         self.owner = owner
+
 
 class User(db.Model):
 
@@ -57,15 +58,18 @@ class User(db.Model):
         self.email = email
         self.pw_hash = make_pw_hash(password, salt=None)
 
+
 @app.before_request
 #@app.route('/', methods=['POST', 'GET'])
 def require_login():
-    
+
     allowed_routes = ['login', 'signup']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect('/login')
 
 # initial page
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
@@ -107,6 +111,7 @@ def signup():
 
     return render_template('signup.html')
 
+
 @app.route('/logout')
 def logout():
     del session['email']
@@ -120,40 +125,22 @@ def index():
 
     owner = User.query.filter_by(email=session['email']).first()
 
-    #form = Blog()
-    #if request.method == "GET":
-        #blogs = Blog.query.all()
-        #print(blogs[1].id)
-        #return render_template('index.html', blog=blogs)
-
-   #if request.method == "POST":
-       # post = Blog(title=request.form['btitle'],
-                   # content=request.form['new_blog'])
-        #db.session.add(post)
-       # db.session.commit()
-        #flash('Your post has been created!', 'success')
-        #return redirect(url_for('index.html'))
-
-
+    
     if request.method == 'POST':
         #print("-------------------")
         #print(request.form)
-        print("-------------------")
-        blog_name = request.form['blog']
-        #blog_id = request.form['blog']
-        #blog_title = request.form['btitle']
-        #blog_post = request.form['new_blog']
-        new_blog = Blog(blog_name, owner)
-        #new_blog = Blog(blog_id, owner)
-        db.session.add(new_blog)
+        #print("-------------------")
+        
+        blog_name = request.form['blog'] 
+        new_blog = request.form['nblog']       
+        new_post = Blog(blog_name, new_blog, owner)        
+        db.session.add(new_post)
         db.session.commit()
 
     blogs = Blog.query.filter_by(post=False, owner=owner).all()
-    post_blogs = Blog.query.filter_by(post=True, owner=owner).all()
-    return render_template('index.html', title="Blogz!", 
-    blogs=blogs, post_blogs=post_blogs)
-
-  
+    posted_blogs = Blog.query.filter_by(post=True, owner=owner).all()
+    return render_template('index.html', title="Blogz!",
+                           blogs=blogs, posted_blogs=posted_blogs)
 
 
 @app.route('/delete-blog', methods=['POST'])
@@ -166,6 +153,7 @@ def delete_blog():
     db.session.commit()
 
     return redirect('/')
+
 
 if __name__ == '__main__':
     app.run()
